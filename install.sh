@@ -12,6 +12,7 @@ ensureHomebrew() {
 }
 
 ensureHomebrewBundles() {
+	echo "Checking homebrew bundles..."
 	brew bundle check
 	rc=$?; if [[ $rc != 0 ]]; then
 		echo "Installing homebrew bundles..."
