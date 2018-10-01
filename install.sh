@@ -21,15 +21,17 @@ ensureHomebrewBundles() {
 	echo "All homebrew bundles were installed."
 	echo "----------"
 	echo
+
+	echo "Installing pure prompt..."
+	npm install --global pure-prompt
+	echo "----------"
+	echo
 }
 
 ensureNeovimConfig() {
-	if [ -d ~/.config/nvim ]; then
-		echo "Mkdir ~/.config/nvim"
-		mkdir -p ~/.config/nvim
-	fi
 	echo "Updating neovim config..."
-	cat ./nvim/init.vim > ~/.config/init.vim
+	mkdir -p ~/.config/nvim
+	cat ./nvim/init.vim > ~/.config/nvim/init.vim
 	echo "----------"
 	echo
 }
