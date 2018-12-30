@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+help() {
+  cat <<"EOF"
+USAGE:
+  kubens                   : show current namespace
+  kubens ls                : show all namespaces
+  kubens set <NAMESPACE>   : set current namespace
+  kubens ctx               : show current context
+  kubens ctx ls            : show avalible contexts
+  kubens ctx set <CONTEXT> : set current context
+  kubens -h,--help,help    : show this message
+EOF
+}
+
+exit_err() {
+  echo >&2 "${1}"
+  exit 1
+}
+
+current_context() {
+  $KUBECTL config view -o=jsonpath='{.current-context}'
+}
+
+get_namespace() {
+  local ctx ns
+  ctx="$(current_context)" || exit_err "error: getting current context"
+  ns="$($KUBECTL config view -o=jsonpath="{.contexts[?(@.name==\"${ctx}\")].context.namespace}")" \
+     || exit_err "error: getting current namespace"
+
+  if [[ -z "${ns}" ]]; then
+    echo "default"
+  else
+    echo "${ns}"
+  fi
+}
+
+set_namespace() {
+  local ctx ns
+  ctx=$(current_context) || exit_err "error: failed to get current context"
+  ns="${1}"
+  $KUBECTL config set-context "${ctx}" --namespace="$ns"
+  echo "Active namespace is \"$ns\".">&2
+}
+
+get_namespaces() {
+  $KUBECTL get namespaces -o=jsonpath='{range .items[*].metadata.name}{@}{"\n"}{end}'
+}
+
+get_contexts() {
+  $KUBECTL config get-contexts -o=name | sort -n
+}
+
+set_context() {
+  $KUBECTL config use-context "${1}"
+}
+
+main() {
+  if hash kubectl 2>/dev/null; then
+    KUBECTL=kubectl
+  else
+    exit_err "cannot find kubectl"
+  fi
+
+  if [[ "$#" -eq 0 ]]; then
+    get_namespace
+  elif [[ "$#" -eq 1 ]]; then
+    if [[ "${1}" == "-h" || "${1}" == "--help" || "${1}" == "help" ]]; then
+      help
+    elif [[ "${1}" == "ls" ]]; then
+      get_namespaces
+    elif [[ "$1" == "ctx" ]]; then
+      current_context
+    fi
+  elif [[ "$#" -eq 2 ]]; then
+    if [[ "${1}" == "set" ]]; then
+      set_namespace "${2}"
+    elif [[ "${1}" == "ctx" ]]; then
+      if [[ "${2}" == "ls" ]]; then
+        get_contexts
+      else
+        exit_err "error: unsupported command"
+      fi
+    else
+      exit_err "error: unsupported command"
+    fi
+  elif [[ "$#" -eq 3 ]]; then
+    if [[ "${1}" == "ctx" && "${2}" == "set" ]]; then
+      set_context "${3}"
+    else
+      exit_err "error: unsupported command"
+    fi
+  else
+    help
+  fi
+}
+
+main "$@"
