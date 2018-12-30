@@ -36,8 +36,17 @@ ensureNeovimConfig() {
 	echo
 }
 
+ensureFish() {
+	echo "Installing fisher..."
+	curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+	cat fish/fishfile > ~/.config/fish/fishfile
+	echo "----------"
+	echo
+}
+
 ensureHomebrew
 ensureHomebrewBundles
 ensureNeovimConfig
+ensureFish
 
 echo "All done!"
