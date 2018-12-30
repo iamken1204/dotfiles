@@ -32,8 +32,8 @@ function fish_prompt
       set status_ahead 0
       set status_behind 0
 		end
-		test $status_ahead -ne 0; and printf (set_color brmagenta)'?'
-		test $status_behind -ne 0; and printf (set_color brmagenta)'?'
+		test $status_ahead -ne 0; and printf (set_color brmagenta)'⇡'
+		test $status_behind -ne 0; and printf (set_color brmagenta)'⇣'
 		printf (set_color normal)']'
 	end
 
