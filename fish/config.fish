@@ -37,7 +37,7 @@ function fish_prompt
 		printf (set_color normal)']'
 	end
 
-	printf '\n'(set_color red)'?'(set_color yellow)'?'(set_color green)'? '
+	printf '\n'(set_color red)'❯'(set_color yellow)'❯'(set_color green)'❯ '
 end
 
 ##### functions #####

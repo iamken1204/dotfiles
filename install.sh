@@ -39,7 +39,9 @@ ensureNeovimConfig() {
 ensureFish() {
 	echo "Installing fisher..."
 	curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+	cat fish/config.fish > ~/.config/fish/config.fish
 	cat fish/fishfile > ~/.config/fish/fishfile
+	echo "Don't forget to run 'fisher' to install fish plugins"
 	echo "----------"
 	echo
 }
