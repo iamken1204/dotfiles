@@ -18,6 +18,9 @@ plugins=(git golang docker kubectl)
 
 source $ZSH/oh-my-zsh.sh
 
+# Homebrew
+export PATH="/usr/local/sbin:$PATH"
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
